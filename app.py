@@ -4,13 +4,16 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 
+from wordcloud import WordCloud, STOPWORDS
+import matplotlib.pyplot as plt
+
 st.title('Sentiment analysis of tweets about us airlines')
 st.sidebar.title('Sentiment analysis of tweets about us airlines')
 
 st.markdown("sentiment of tweet")
 st.sidebar.markdown("sentiment of tweet")
 
-DATA_URL = ('/Users/khoundokarzahid/Stack/github/PyStreamlit/Tweets.csv')
+DATA_URL = ('Tweets.csv')
 
 
 @st.cache(persist=True)
@@ -61,12 +64,24 @@ st.sidebar.subheader("Breakdwon ariline tweets by sentiments")
 choice = st.sidebar.multiselect('Pick airllines',
                                 ('US airways', 'United', 'American', 'Southeast', 'Delta', 'Virgin America'), key='0')
 
-
-if len(choice)>0:
+if len(choice) > 0:
     choice_data = data[data.airline.isin(choice)]
-    fig_choice = px.histogram(choice_data, x='airline',y='airline_sentiment', histfunc='count',color='airline_sentiment',facet_col= 'airline_sentiment', labels={'airline_sentiment:tweets'},height=600,width=800)
+    fig_choice = px.histogram(choice_data, x='airline', y='airline_sentiment', histfunc='count',
+                              color='airline_sentiment', facet_col='airline_sentiment',
+                              labels={'airline_sentiment:tweets'}, height=600, width=800)
     st.plotly_chart(fig_choice)
 
+st.sidebar.header("Word Cloud")
 
-
-
+word_sentiment = st.sidebar.radio('Display word cloud for what sentiment?', ('positive', 'neutral', 'negative'))
+if not st.sidebar.checkbox("Close", True, key='3'):
+    st.header('word  Cloud for % st sentiment' % (word_sentiment))
+    df = data[data['airline_sentiment'] == word_sentiment]
+    words = ' '.join(df['text'])
+    processed_words = ' '.join(
+        [word for word in words.split() if 'http' not in word and not word.startswith('@') and word != 'RT'])
+    wordcloud = WordCloud(stopwords=STOPWORDS, background_color='white', height=640, width=800).generate(processed_words)
+    plt.imshow(wordcloud)
+    plt.xticks([])
+    plt.yticks([])
+    st.pyplot()
