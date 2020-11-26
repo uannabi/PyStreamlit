@@ -4,8 +4,8 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 
-st.title('sentiment analysis of tweets about us airlines')
-st.sidebar.title('sentiment analysis of tweets about us airlines')
+st.title('Sentiment analysis of tweets about us airlines')
+st.sidebar.title('Sentiment analysis of tweets about us airlines')
 
 st.markdown("sentiment of tweet")
 st.sidebar.markdown("sentiment of tweet")
@@ -28,7 +28,7 @@ random_tweet = st.sidebar.radio('Sentiment', ('positive', 'neutral', 'negative')
 
 st.sidebar.markdown(data.query('airline_sentiment == @random_tweet')[["text"]].sample(n=1).iat[0, 0])
 
-st.sidebar.markdown("### number of tweets by sentiment")
+st.sidebar.markdown("### Number of tweets by sentiment")
 
 select = st.sidebar.selectbox('Visualization type', ['Histogram', 'Pie Chart'], key='1')
 
@@ -44,3 +44,26 @@ if not st.sidebar.checkbox("Hide", True):
     else:
         fig = px.pie(sentiment_count, values='Tweets', names='Sentiment')
         st.plotly_chart(fig)
+
+
+# st.map(data)
+
+st.sidebar.subheader("When and where are user tweeting from?")
+hour = st.sidebar.slider("Hours of day", 0, 23)
+modified_data = data[data['tweet_created'].dt.hour == hour]
+if not st.sidebar.checkbox("Close",True,key=1):
+    st.markdown("### Tweets locations based on the time of day")
+    st.markdown("%i tweets between %i:00 and %i:00" % (len(modified_data),hour,(hour+1)%24))
+    st.map(modified_data)
+    if st.sidebar.checkbox("Show raw data", False):
+        st.write(modified_data)
+
+
+
+
+
+
+
+
+
+
