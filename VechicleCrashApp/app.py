@@ -2,11 +2,11 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pydeck as pdk
+import plotly.express as px
 
 DATA_URL = ("/Users/khoundokarzahid/Downloads/Motor_Vehicle_Collisions_-_Crashes.csv")
 
 st.title("Motor Vehicle Collision in NYC")
-
 st.markdown("Analysis Motor Vehicle Collision 🚗 in NYC")
 
 
@@ -15,10 +15,8 @@ def load_data(nrows):
     data = pd.read_csv(DATA_URL, nrows=nrows, parse_dates=[['CRASH_DATE', 'CRASH_TIME']])
     data.dropna(subset=['LATITUDE', 'LONGITUDE'], inplace=True)
     lowercase = lambda x: str(x).lower()
-
     data.rename(lowercase, axis='columns', inplace=True)
     data.rename(columns={'crash_date_crash_time': 'date/time'}, inplace=True)
-
     return data
 
 
@@ -34,6 +32,7 @@ date = data[data['date/time'].dt.hour == hour]
 
 st.markdown("Vehicle Collisions between %i:00 and %i:00" % (hour, (hour + 1) % 24))
 midpoint = (np.average(data["latitude"]), np.average(data["longitude"]))
+
 st.write(pdk.Deck(
     map_style="mapbox://styles/mapbox/light-v9",
     initial_view_state={
@@ -52,10 +51,19 @@ st.write(pdk.Deck(
             pickable=True,
             elevation_scale=4,
             elevation_range=[0, 1000],
-        )
-    ]
+        ),
+    ],
 ))
 
+st.subheader("Breakdown by minute between %i:00 and %i:00" % (hour, (hour + 1) % 24))
+filtered = data[
+    (data['date/time'].dt.hour >= hour) & (data['date/time'].dt.hour < (hour +1))
+
+]
+hist = np.histogram(filtered['date/time'].dt.minute, bins=60, range=(0,60))[0]
+chart_data =pd.DataFrame({'minute':range(60), 'crashes':hist})
+fig = px.bar(chart_data, x = 'minute', y='crashes', hover_data=['minute','crashes'], height=400)
+st.write(fig)
 if st.checkbox("Show Raw Data", False):
     st.subheader('Raw Data')
     st.write(data)
