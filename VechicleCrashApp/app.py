@@ -4,7 +4,8 @@ import numpy as np
 import pydeck as pdk
 import plotly.express as px
 
-DATA_URL = ("Data_Path")
+DATE_TIME = "date/time"
+DATA_URL = ("DataPath")
 
 st.title("Motor Vehicle Collision in NYC")
 st.markdown("Analysis Motor Vehicle Collision 🚗 in NYC")
@@ -21,7 +22,8 @@ def load_data(nrows):
 
 
 data = load_data(100000)
-original_data = data
+data[['latitude','longitude']].to_csv('lat_long.csv', index=False)
+
 
 st.header("Where are the most people injured in NYC ?")
 injured_people = st.slider("Number of persons injured in vehicle collision ", 0, 19)
@@ -30,10 +32,11 @@ st.map(data.query("injured_persons >= @injured_people")[["latitude", "longitude"
 st.header("How many collisions occur during a given time  fo day?")
 hour = st.slider("Hour to look at", 0, 23)
 date = data[data['date/time'].dt.hour == hour]
-
+original_data = data
+data = data[data[DATE_TIME].dt.hour == hour]
 st.markdown("Vehicle Collisions between %i:00 and %i:00" % (hour, (hour + 1) % 24))
-midpoint = (np.average(data["latitude"]), np.average(data["longitude"]))
 
+midpoint = (np.average(data["latitude"]), np.average(data["longitude"]))
 st.write(pdk.Deck(
     map_style="mapbox://styles/mapbox/light-v9",
     initial_view_state={
@@ -47,6 +50,7 @@ st.write(pdk.Deck(
             "HexagonLayer",
             data=data[['date/time', 'latitude', 'longitude']],
             get_position=['longitude', 'latitude'],
+            auto_highlight=True,
             radius=100,
             extruded=True,
             pickable=True,
@@ -56,18 +60,23 @@ st.write(pdk.Deck(
     ],
 ))
 
+if st.checkbox("Show Raw Data", False):
+    st.subheader('Raw Data')
+    st.write(data)
 st.subheader("Breakdown by minute between %i:00 and %i:00" % (hour, (hour + 1) % 24))
 filtered = data[
     (data['date/time'].dt.hour >= hour) & (data['date/time'].dt.hour < (hour + 1))
 
-    ]
+]
 hist = np.histogram(filtered['date/time'].dt.minute, bins=60, range=(0, 60))[0]
 chart_data = pd.DataFrame({'minute': range(60), 'crashes': hist})
+
 fig = px.bar(chart_data, x='minute', y='crashes', hover_data=['minute', 'crashes'], height=400)
 st.write(fig)
 
 st.header("Top 5 dangerous streets by affected type")
 select = st.selectbox('Affected type of people', ['Pedestrians', 'Cyclists', 'Motorists'])
+
 if select == 'Pedestrians':
     st.write(original_data.query("injured_pedestrians >= 1")[["on_street_name", "injured_pedestrians"]].sort_values(
         by=['injured_pedestrians'], ascending=False).dropna(how='any')[:5])
@@ -78,6 +87,4 @@ else:
     st.write(original_data.query("injured_motorists >= 1")[["on_street_name", "injured_motorists"]].sort_values(
         by=['injured_motorists'], ascending=False).dropna(how='any')[:5])
 
-if st.checkbox("Show Raw Data", False):
-    st.subheader('Raw Data')
-    st.write(data)
+
