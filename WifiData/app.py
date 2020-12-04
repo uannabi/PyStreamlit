@@ -73,5 +73,5 @@ if len(choice) > 0:
                               labels={'BD_WIFI_USER:type'}, height=600, width=800)
     st.plotly_chart(fig_choice)
 
-st.sidebar.header("Word Cloud")
+
 
