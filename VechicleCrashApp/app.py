@@ -5,7 +5,8 @@ import pydeck as pdk
 import plotly.express as px
 
 DATE_TIME = "date/time"
-DATA_URL = ("DataPath")
+# DATA_URL = ("/Users/khoundokarzahid/Downloads/Motor_Vehicle_Collisions_-_Crashes.csv")
+# DATA_URL = ("/Users/khoundokarzahid/Downloads/Motor_Vehicle_Collisions_-_Crashes.csv")
 
 st.title("Motor Vehicle Collision in NYC")
 st.markdown("Analysis Motor Vehicle Collision 🚗 in NYC")
