@@ -38,14 +38,6 @@ if st.sidebar.checkbox("Show Raw Data", False):
     st.subheader("Raw Data")
     st.write(data)
 
-# st.sidebar.header("When wifi user are seen ?")
-# hour = st.sidebar.slider("Hour to look at", 0, 23)
-# date = data[data['last_seen'].dt.hour == hour]
-# original_data = data
-#
-# data = data[data[DATE_TIME].dt.hour == hour]
-# st.sidebar.markdown("user last seen between %i:00 and %i:00" % (hour, (hour + 1) % 24))
-
 midpoint = (np.average(data["latitude"]), np.average(data["longitude"]))
 st.write(pdk.Deck(
     map_style="mapbox://styles/mapbox/light-v9",
@@ -70,18 +62,16 @@ st.write(pdk.Deck(
     ],
 ))
 
-# wifi_options = st.sidebar.radio('con_type',('Cable/DSL','Corporate','Dialup'))
-# st.sidebar.markdown(data.query('con_type == @wifi_options'))
-# ['brq_count'].sample(n=1).iat[0,0]
-#
-# st.sidebar.markdown("### number of wifi by options")
-# select = st.sidebar.selectbox('Visualization type', ['Histogram','Pie Chart'],key='1')
-#
-# wifi_count = data['con_type'].value_counts()
-#
-# wifi_count = pd.DataFrame({'WiFi':wifi_count.index,'Type':wifi_count.values})
-# if not st.sidebar.checkbox("Hide",True):
-#     st.markdown("### Number of Bangladesh wifi users")
-#     if select == 'Histogram':
-#         fig = px.bar(wifi_count,x='Wifi', y='User',color='Wifi', height=500)
-#         st.plotly_chart(fig)
+st.sidebar.subheader("Wifi User Via its Type")
+choice = st.sidebar.multiselect('Pick Wifi Type',
+                                ('Cable/DSL', 'Dialup', 'Corporate'), key='0')
+
+if len(choice) > 0:
+    choice_data = data[data.con_type.isin(choice)]
+    fig_choice = px.histogram(choice_data, x='gps_city', y='con_type', histfunc='count',
+                              color='con_type', facet_col='con_type',
+                              labels={'BD_WIFI_USER:type'}, height=600, width=800)
+    st.plotly_chart(fig_choice)
+
+st.sidebar.header("Word Cloud")
+
