@@ -8,7 +8,8 @@ from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 import pydeck as pdk
 import plotly.express as px
-
+from wordcloud import WordCloud, STOPWORDS
+import matplotlib.pyplot as plt
 DATE_TIME = "date/time"
 st.title('Bangladesh WiFi Data Analysis')
 st.sidebar.title('WiFi Data Analysis')
@@ -74,4 +75,18 @@ if len(choice) > 0:
     st.plotly_chart(fig_choice)
 
 
-
+# data = load_data()
+# st.sidebar.subheader('Top Place')
+# wifi_type = st.sidebar.radio('Wifi', ('Cable/DSL', 'Dialup', 'Corporate'))
+# st.sidebar.markdown(data.query('gps_city == @wifi_type')[["con_type"]].sample(n=1).iat[0,0]
+connection = data['con_type'].value_counts()
+value = data['gps_city'].value_counts()
+wifi_count = pd.DataFrame({'Type': connection.index, 'City':value})
+if not st.sidebar.checkbox("Hide", True):
+    st.markdown("### Number of tweets by Sentiment")
+    if select == "Histogram":
+        fig = px.bar(connection, x='con_type', y='gps_city', color='gps_city', height=500)
+        st.plotly_chart(fig)
+    else:
+        fig = px.pie(connection, values='gps_city', names='con_type')
+        st.plotly_chart(fig)
