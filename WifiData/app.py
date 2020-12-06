@@ -75,13 +75,15 @@ if len(choice) > 0:
     st.plotly_chart(fig_choice)
 
 
-# data = load_data()
-# st.sidebar.subheader('Top Place')
-# wifi_type = st.sidebar.radio('Wifi', ('Cable/DSL', 'Dialup', 'Corporate'))
-# st.sidebar.markdown(data.query('gps_city == @wifi_type')[["con_type"]].sample(n=1).iat[0,0]
+data = load_data()
+st.sidebar.subheader('Top Place')
+wifi_type = st.sidebar.radio('Wifi', ('Cable/DSL', 'Dialup', 'Corporate'))
+st.sidebar.markdown(data.query('gps_city == @wifi_type')[["con_type"]].sample(n=1).iat[0,0])
+st.sidebar.markdown('### number of city by wifi type')
+
 connection = data['con_type'].value_counts()
 value = data['gps_city'].value_counts()
-wifi_count = pd.DataFrame({'Type': connection.index, 'City':value})
+wifi_count = pd.DataFrame({'Type': connection.index, 'City':connection.index})
 if not st.sidebar.checkbox("Hide", True):
     st.markdown("### Number of tweets by Sentiment")
     if select == "Histogram":
