@@ -91,5 +91,5 @@ if not st.sidebar.checkbox("Hide", True):
         fig = px.bar(connection, x='con_type', y='con_type', color='gps_city', height=500)
         st.plotly_chart(fig)
     else:
-        fig = px.pie(connection, values='con_type', names='city')
-        # st.plotly_chart(fig)
+        # fig = px.pie(connection, values='con_type', names='city')
+        # # st.plotly_chart(fig)
