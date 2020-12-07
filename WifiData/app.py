@@ -92,4 +92,4 @@ if not st.sidebar.checkbox("Hide", True):
         st.plotly_chart(fig)
     else:
         fig = px.pie(connection, values='con_type', names='city')
-        st.plotly_chart(fig)
+        # st.plotly_chart(fig)
