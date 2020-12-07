@@ -85,11 +85,11 @@ select = st.sidebar.selectbox('Visualization type',['Histogram', 'Pie Chart'], k
 connection = data['con_type'].value_counts()
 value = data['gps_city'].value_counts()
 wifi_count = pd.DataFrame({'Type': connection.index, 'City':connection.index})
-if not st.sidebar.checkbox("Hide", True):
-    st.markdown("### Number of tweets by Sentiment")
-    if select == "Histogram":
-        fig = px.bar(connection, x='con_type', y='con_type', color='gps_city', height=500)
-        st.plotly_chart(fig)
-    else:
+# if not st.sidebar.checkbox("Hide", True):
+#     st.markdown("### Number of tweets by Sentiment")
+#     if select == "Histogram":
+#         fig = px.bar(connection, x='con_type', y='con_type', color='gps_city', height=500)
+#         st.plotly_chart(fig)
+#     else:
         # fig = px.pie(connection, values='con_type', names='city')
         # # st.plotly_chart(fig)
