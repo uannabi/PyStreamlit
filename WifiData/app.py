@@ -77,14 +77,19 @@ if len(choice) > 0:
 
 data = load_data(nrows=500)
 st.sidebar.subheader('Top Place')
-wifi_type = st.sidebar.radio('Wifi', ('Cable/DSL', 'Dialup', 'Corporate'))
-st.sidebar.markdown(data.query('gps_city == @wifi_type')[["con_type"]])
-st.sidebar.markdown('### Number of city by wifi type')
-select = st.sidebar.selectbox('Visualization type',['Histogram', 'Pie Chart'], key='1')
+df = pd.DataFrame(data[:5000],columns=['con_type','gps_city','brq_count'])
+df.hist()
+plt.show()
+st.pyplot()
 
-connection = data['con_type'].value_counts()
-value = data['gps_city'].value_counts()
-wifi_count = pd.DataFrame({'Type': connection.index, 'City':connection.index})
+# wifi_type = st.sidebar.radio('Wifi', ('Cable/DSL', 'Dialup', 'Corporate'))
+# st.sidebar.markdown(data.query('gps_city == @wifi_type')[["con_type"]])
+# st.sidebar.markdown('### Number of city by wifi type')
+# select = st.sidebar.selectbox('Visualization type',['Histogram', 'Pie Chart'], key='1')
+#
+# connection = data['con_type'].value_counts()
+# value = data['gps_city'].value_counts()
+# wifi_count = pd.DataFrame({'Type': connection.index, 'City':connection.index})
 # if not st.sidebar.checkbox("Hide", True):
 #     st.markdown("### Number of tweets by Sentiment")
 #     if select == "Histogram":
