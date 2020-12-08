@@ -75,12 +75,19 @@ if len(choice) > 0:
     st.plotly_chart(fig_choice)
 
 
-data = load_data(nrows=500)
-st.sidebar.subheader('Top Place')
+data = load_data(nrows=5000)
+
+st.sidebar.subheader('Bar chart according to BRQ')
 df = pd.DataFrame(data[:5000],columns=['con_type','gps_city','brq_count'])
 df.hist()
 plt.show()
 st.pyplot()
+
+st.sidebar.subheader('City wise Connection Type')
+if st.sidebar.checkbox('Show Stacked Information'):
+    st.write(data)
+    st.bar_chart(data['last_seen'])
+
 
 # wifi_type = st.sidebar.radio('Wifi', ('Cable/DSL', 'Dialup', 'Corporate'))
 # st.sidebar.markdown(data.query('gps_city == @wifi_type')[["con_type"]])
