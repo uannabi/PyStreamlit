@@ -89,19 +89,3 @@ if st.sidebar.checkbox('Show Stacked Information'):
     st.bar_chart(data['last_seen'])
 
 
-# wifi_type = st.sidebar.radio('Wifi', ('Cable/DSL', 'Dialup', 'Corporate'))
-# st.sidebar.markdown(data.query('gps_city == @wifi_type')[["con_type"]])
-# st.sidebar.markdown('### Number of city by wifi type')
-# select = st.sidebar.selectbox('Visualization type',['Histogram', 'Pie Chart'], key='1')
-#
-# connection = data['con_type'].value_counts()
-# value = data['gps_city'].value_counts()
-# wifi_count = pd.DataFrame({'Type': connection.index, 'City':connection.index})
-# if not st.sidebar.checkbox("Hide", True):
-#     st.markdown("### Number of tweets by Sentiment")
-#     if select == "Histogram":
-#         fig = px.bar(connection, x='con_type', y='con_type', color='gps_city', height=500)
-#         st.plotly_chart(fig)
-#     else:
-        # fig = px.pie(connection, values='con_type', names='city')
-        # # st.plotly_chart(fig)
